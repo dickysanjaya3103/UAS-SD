@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-card">
+    <h4 class="mb-4">Detail Jadwal Booking</h4>
+    <table class="table table-striped">
+        <tr>
+            <th>Ruangan</th>
+            <td>{{ booking.room.number }}</td>
+        </tr>
+        <tr>
+            <th>Tanggal</th>
+            <td>{{ booking.booking_date }}</td>
+        </tr>
+        <tr>
+            <th>Waktu</th>
+            <td>{{ booking.start_time }} - {{ booking.end_time }}</td>
+        </tr>
+        <tr>
+            <th>Peminjam</th>
+            <td>{{ booking.user.username }}</td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td>
+                <span class="status-badge 
+                    {% if booking.status == 'approved' %}status-available
+                    {% elif booking.status == 'pending' %}status-maintenance
+                    {% elif booking.status == 'rejected' %}status-booked
+                    {% endif %}">
+                    {{ booking.status|title }}
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <th>Keperluan</th>
+            <td>{{ booking.description }}</td>
+        </tr>
+    </table>
+    <a href="{% url 'jadwal' %}" class="btn btn-secondary mt-3">Kembali</a>
+</div>
+{% endblock %}

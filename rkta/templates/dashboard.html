@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+{% load custom_filters %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RuangKita - Dashboard Kampus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #283593;
+            --accent-color: #3949ab;
+            --success-color: #43a047;
+            --warning-color: #fdd835;
+            --danger-color: #e53935;
+        }
+
+        /* Reset beberapa style dasar */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f6fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+.h2,h2{
+    margin-left: 400px !important;
+}
+
+p.text-muted {
+    margin-left: 400px !important;
+}
+
+/* Update sidebar styling */
+.sidebar {
+    background: var(--primary-color);
+    height: 100vh;
+    position: fixed;
+    width: 250px;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    padding: 0;
+}
+
+/* Update sidebar brand styling */
+.sidebar-brand {
+    background: var(--primary-color);
+    color: white;
+    padding: 15px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.brand-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Update toggle button styling */
+.sidebar-toggle {
+    background: transparent;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+    color: rgba(255,255,255,0.8);
+    transform: scale(1.1);
+}
+
+/* Update sidebar menu styling */
+.sidebar-menu {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.sidebar-menu li {
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li a {
+    color: #ecf0f1;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    transition: 0.3s;
+}
+
+.sidebar-menu li a i {
+    margin-right: 10px;
+    width: 20px;
+}
+
+.sidebar-menu li:hover {
+    background: var(--secondary-color);
+}
+
+/* Active menu item styling */
+.sidebar-menu li.active {
+    background: var(--secondary-color);
+    position: relative;
+}
+
+.sidebar-menu li.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background-color: white;
+}
+
+.sidebar-menu li.active a {
+    color: white;
+}
+
+.sidebar-menu li.active {
+    background: var(--secondary-color);
+}
+
+/* Update main content */
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.main-content.expanded {
+    margin-left: 0;
+}
+
+/* Collapsed state */
+.sidebar.collapsed {
+    left: -250px;
+}
+
+.sidebar.collapsed .sidebar-toggle i {
+    transform: rotate(180deg);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        left: -250px;
+    }
+    
+    .sidebar.show {
+        left: 0;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+}
+
+        .sidebar-toggle {
+            position: absolute;
+            right: -28px;
+            top: 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            padding: 8px 10px;
+            z-index: 1001;
+            cursor: pointer;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            width: 28px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Rotate arrow when sidebar is collapsed */
+        .sidebar.collapsed .sidebar-toggle i {
+            transform: rotate(180deg);
+        }
+
+        /* Transition for smooth arrow rotation */
+        .sidebar-toggle i {
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.collapsed .sidebar-toggle {
+            right: -40px;
+        }
+
+        .sidebar {
+            background: var(--primary-color);
+            min-height: 100vh;
+            padding: 20px 0;
+            position: fixed;
+            width: 250px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            left: 0;
+        }
+
+        .sidebar.collapsed {
+            left: -250px;
+        }
+
+        .sidebar-brand {
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-menu {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            padding: 10px 20px;
+            margin: 8px 0;
+        }
+
+        .sidebar-menu li a {
+            color: #ecf0f1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .sidebar-menu li a i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        .sidebar-menu li:hover {
+            background: var(--secondary-color);
+            border-radius: 5px;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .quick-stats {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .chat-button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Update media queries for mobile */
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -70px;
+            }
+            
+            .sidebar.show {
+                left: 0;
+            }
+            
+            .sidebar-toggle {
+                right: -40px;
+            }
+            
+            .sidebar.show .sidebar-toggle {
+                right: -40px;
+            }
+        }
+
+/* Floor Sections Styling */
+.floor-section {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    overflow: hidden;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.floor-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 20px;
+    border-radius: 15px 15px 0 0;
+}
+
+.floor-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.floor-header h3 i {
+    font-size: 1.2rem;
+}
+
+/* Room Grid Layout */
+.room-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 25px;
+}
+
+/* Room Card Styling */
+.room-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    border: 1px solid #eee;
+    position: relative;
+    overflow: hidden;
+}
+
+.room-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--primary-color);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.room-card:hover::before {
+    opacity: 1;
+}
+
+.room-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.room-info h4 {
+    color: var(--primary-color);
+    margin: 0 0 15px 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.status {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.room-card.available .status {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.room-card.occupied .status {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.room-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.room-details span {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.room-details i {
+    color: var(--primary-color);
+    width: 20px;
+}
+
+.book-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.book-btn:hover:not([disabled]) {
+    background: var(--secondary-color);
+    transform: scale(1.02);
+}
+
+.book-btn[disabled] {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Add these new animation keyframes */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Update welcome section styles */
+/* Welcome Section Styles */
+.welcome-section {
+    padding: 50px 0;
+    margin: 0 0 30px 0;
+    background: linear-gradient(135deg, 
+        var(--primary-color), 
+        var(--secondary-color),
+        var(--accent-color));
+    background-size: 200% 200%;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    animation: gradientShift 10s ease infinite;
+}
+
+.welcome-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+.welcome-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin: 0 0 15px 0;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    letter-spacing: 0.5px;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+.welcome-user {
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin: 0;
+    color: rgba(255,255,255,0.9);
+    animation: fadeInUp 0.8s ease-out 0.3s forwards;
+}
+
+/* Update animation keyframes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .welcome-section {
+        margin: 10px;
+        padding: 30px 15px;
+    }
+    
+    .welcome-title {
+        font-size: 2.2rem;
+    }
+    
+    .welcome-user {
+        font-size: 1.2rem;
+    }
+}
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-content">
+            <i class="fas fa-university me-2"></i>
+            <span>RuangKita</span>
+        </div>
+        <button class="sidebar-toggle" id="sidebarToggle">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+    </div>
+    <ul class="sidebar-menu">
+        <li class="active">
+            <a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+        </li>
+        <li>
+            <a href="{% url 'jadwal_list' %}"><i class="fas fa-calendar-alt"></i><span>Jadwal</span></a>
+        </li>
+        <li>
+            <a href="{% url 'room_list' %}"><i class="fas fa-bookmark"></i><span>Booking</span></a>
+        </li>
+        <li>
+            <a href="{% url 'my_bookings' %}"><i class="fas fa-history"></i><span>Riwayat</span></a>
+        </li>
+        <li>
+            <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+        </li>
+    </ul>
+</div>
+
+<!-- Main Content -->
+<div class="main-content" id="main-content">
+    <!-- Tampilan awal selamat datang -->
+    <div class="welcome-section">
+        <div class="welcome-content">
+            <h1 class="welcome-title">Selamat Datang di RuangKita</h1>
+            <p class="welcome-user">{{ user.get_full_name|default:user.username }}</p>
+        </div>
+    </div>
+
+    <!-- Lantai 1 (1 ruangan) -->
+    <div class="floor-section">
+        <div class="floor-header">
+            <h3><i class="fas fa-building"></i> Lantai 1 -</h3>
+        </div>
+        <div class="room-grid">
+            <!-- MG1.01.07 -->
+            <div class="room-card available">
+                <div class="room-info">
+                    <h4>(MG1.01.07)</h4>
+                    <p class="status">Tersedia</p>
+                    <div class="room-details">
+                        <span><i class="fas fa-users"></i> Kapasitas: 80 orang</span>
+                        <span><i class="fas fa-tools"></i> Fasilitas: AC, Proyektor, Papan Tulis, Speaker</span>
+                    </div>
+                    <form method="post" action="{% url 'book_room' room_id=12 %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="nama" value="{{ user.username }}">
+                        <div class="mb-2">
+                            <input type="date" class="form-control mb-1" name="tanggal" required>
+                            <input type="time" class="form-control mb-1" name="waktu_mulai" required>
+                            <input type="time" class="form-control mb-1" name="waktu_selesai" required>
+                        </div>
+                        <button type="submit" class="book-btn">Kirim Booking</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Booking MG1.01.07 -->
+    <div class="modal fade" id="bookingModalMG10107" tabindex="-1">
+      <div class="modal-dialog">
+        <form method="post" action="{% url 'book_room' room_id=12 %}">
+          {% csrf_token %}
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Booking Ruang MG1.01.07</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label">Tanggal Booking</label>
+                <input type="date" class="form-control" name="tanggal" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Mulai</label>
+                <input type="time" class="form-control" name="waktu_mulai" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Selesai</label>
+                <input type="time" class="form-control" name="waktu_selesai" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary">Kirim Booking</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Lantai 2 (4 ruangan) -->
+    <div class="floor-section">
+        <div class="floor-header">
+            <h3><i class="fas fa-building"></i> Lantai 2 -</h3>
+        </div>
+        <div class="room-grid">
+            <!-- MG1.02.02 -->
+            <div class="room-card available">
+                <div class="room-info">
+                    <h4>(MG1.02.02)</h4>
+                    <p class="status">Tersedia</p>
+                    <div class="room-details">
+                        <span><i class="fas fa-users"></i> Kapasitas: 80 orang</span>
+                        <span><i class="fas fa-tools"></i> Fasilitas: AC, Proyektor,Papan Tulis, Speaker</span>
+                    </div>
+                    <form method="post" action="{% url 'book_room' room_id=11 %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="nama" value="{{ user.username }}">
+                        <div class="mb-2">
+                            <input type="date" class="form-control mb-1" name="tanggal" required>
+                            <input type="time" class="form-control mb-1" name="waktu_mulai" required>
+                            <input type="time" class="form-control mb-1" name="waktu_selesai" required>
+                        </div>
+                        <button type="submit" class="book-btn">Kirim Booking</button>
+                    </form>
+                </div>
+            </div>
+            <!-- MG1.02.06 -->
+            <div class="room-card available">
+                <div class="room-info">
+                    <h4>(MG1.02.06)</h4>
+                    <p class="status">Tersedia</p>
+                    <div class="room-details">
+                        <span><i class="fas fa-users"></i> Kapasitas: 60 orang</span>
+                        <span><i class="fas fa-tools"></i> Fasilitas: AC, Proyektor, Papan Tulis, Speaker</span>
+                    </div>
+                    <form method="post" action="{% url 'book_room' room_id=10 %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="nama" value="{{ user.username }}">
+                        <div class="mb-2">
+                            <input type="date" class="form-control mb-1" name="tanggal" required>
+                            <input type="time" class="form-control mb-1" name="waktu_mulai" required>
+                            <input type="time" class="form-control mb-1" name="waktu_selesai" required>
+                        </div>
+                        <button type="submit" class="book-btn">Kirim Booking</button>
+                    </form>
+                </div>
+            </div>
+            <!-- MG1.02.07 -->
+            <div class="room-card available">
+                <div class="room-info">
+                    <h4>(MG1.02.07)</h4>
+                    <p class="status">Tersedia</p>
+                    <div class="room-details">
+                        <span><i class="fas fa-users"></i> Kapasitas: 60 orang</span>
+                        <span><i class="fas fa-tools"></i> Fasilitas: AC, Proyektor, Papan Tulis, Speaker</span>
+                    </div>
+                    <form method="post" action="{% url 'book_room' room_id=9 %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="nama" value="{{ user.username }}">
+                        <div class="mb-2">
+                            <input type="date" class="form-control mb-1" name="tanggal" required>
+                            <input type="time" class="form-control mb-1" name="waktu_mulai" required>
+                            <input type="time" class="form-control mb-1" name="waktu_selesai" required>
+                        </div>
+                        <button type="submit" class="book-btn">Kirim Booking</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Booking MG1.02.02 -->
+    <div class="modal fade" id="bookingModalMG10202" tabindex="-1">
+      <div class="modal-dialog">
+        <form method="post" action="{% url 'book_room' room_id=11 %}">
+          {% csrf_token %}
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="bookingModalLabelMG10202">Booking Ruang (MG1.02.02)</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label">Tanggal Booking</label>
+                <input type="date" class="form-control" name="tanggal" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Mulai</label>
+                <input type="time" class="form-control" name="waktu_mulai" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Selesai</label>
+                <input type="time" class="form-control" name="waktu_selesai" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary">Kirim Booking</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Modal Booking MG1.02.06 -->
+    <div class="modal fade" id="bookingModalMG10206" tabindex="-1">
+      <div class="modal-dialog">
+        <form method="post" action="{% url 'book_room' room_id=10 %}">
+          {% csrf_token %}
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="bookingModalLabelMG10206">Booking Ruang (MG1.02.06)</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label">Tanggal Booking</label>
+                <input type="date" class="form-control" name="tanggal" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Mulai</label>
+                <input type="time" class="form-control" name="waktu_mulai" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Selesai</label>
+                <input type="time" class="form-control" name="waktu_selesai" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary">Kirim Booking</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Modal Booking MG1.02.07 -->
+    <div class="modal fade" id="bookingModalMG10207" tabindex="-1">
+      <div class="modal-dialog">
+        <form method="post" action="{% url 'book_room' room_id=9 %}">
+          {% csrf_token %}
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="bookingModalLabelMG10207">Booking Ruang (MG1.02.07)</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label">Tanggal Booking</label>
+                <input type="date" class="form-control" name="tanggal" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Mulai</label>
+                <input type="time" class="form-control" name="waktu_mulai" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Selesai</label>
+                <input type="time" class="form-control" name="waktu_selesai" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary">Kirim Booking</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Lantai 3 (4 ruangan) -->
+    <div class="floor-section">
+        <div class="floor-header">
+            <h3><i class="fas fa-building"></i> Lantai 3 -</h3>
+        </div>
+        <div class="room-grid">
+            <!-- MG1.03.03 -->
+            <div class="room-card available">
+                <div class="room-info">
+                    <h4>(MG1.03.03)</h4>
+                    <p class="status">Tersedia</p>
+                    <div class="room-details">
+                        <span><i class="fas fa-users"></i> Kapasitas: 80 orang</span>
+                        <span><i class="fas fa-tools"></i> Fasilitas: AC, Proyektor, Papan Tulis, Speaker</span>
+                    </div>
+                    <form method="post" action="{% url 'book_room' room_id=8 %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="nama" value="{{ user.username }}">
+                        <div class="mb-2">
+                            <input type="date" class="form-control mb-1" name="tanggal" required>
+                            <input type="time" class="form-control mb-1" name="waktu_mulai" required>
+                            <input type="time" class="form-control mb-1" name="waktu_selesai" required>
+                        </div>
+                        <button type="submit" class="book-btn">Kirim Booking</button>
+                    </form>
+                </div>
+            </div>
+            <!-- MG1.03.07 -->
+            <div class="room-card available">
+                <div class="room-info">
+                    <h4>(MG1.03.07)</h4>
+                    <p class="status">Tersedia</p>
+                    <div class="room-details">
+                        <span><i class="fas fa-users"></i> Kapasitas: 60 orang</span>
+                        <span><i class="fas fa-tools"></i> Fasilitas: AC, Proyektor, Papan Tulis, Speaker</span>
+                    </div>
+                    <form method="post" action="{% url 'book_room' room_id=6 %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="nama" value="{{ user.username }}">
+                        <div class="mb-2">
+                            <input type="date" class="form-control mb-1" name="tanggal" required>
+                            <input type="time" class="form-control mb-1" name="waktu_mulai" required>
+                            <input type="time" class="form-control mb-1" name="waktu_selesai" required>
+                        </div>
+                        <button type="submit" class="book-btn">Kirim Booking</button>
+                    </form>
+                </div>
+            </div>
+            <!-- MG1.03.08 -->
+            <div class="room-card available">
+                <div class="room-info">
+                    <h4>(MG1.03.08)</h4>
+                    <p class="status">Tersedia</p>
+                    <div class="room-details">
+                        <span><i class="fas fa-users"></i> Kapasitas: 60 orang</span>
+                        <span><i class="fas fa-tools"></i> Fasilitas: AC, Proyektor, Papan Tulis, Speaker</span>
+                    </div>
+                    <form method="post" action="{% url 'book_room' room_id=5 %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="nama" value="{{ user.username }}">
+                        <div class="mb-2">
+                            <input type="date" class="form-control mb-1" name="tanggal" required>
+                            <input type="time" class="form-control mb-1" name="waktu_mulai" required>
+                            <input type="time" class="form-control mb-1" name="waktu_selesai" required>
+                        </div>
+                        <button type="submit" class="book-btn">Kirim Booking</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Booking MG1.03.03 -->
+    <div class="modal fade" id="bookingModalMG10303" tabindex="-1">
+      <div class="modal-dialog">
+        <form method="post" action="{% url 'book_room' room_id=8 %}">
+          {% csrf_token %}
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="bookingModalLabelMG10303">Booking Ruang (MG1.03.03)</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label">Tanggal Booking</label>
+                <input type="date" class="form-control" name="tanggal" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Mulai</label>
+                <input type="time" class="form-control" name="waktu_mulai" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Selesai</label>
+                <input type="time" class="form-control" name="waktu_selesai" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary">Kirim Booking</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Modal Booking MG1.03.07 -->
+    <div class="modal fade" id="bookingModalMG10307" tabindex="-1">
+      <div class="modal-dialog">
+        <form method="post" action="{% url 'book_room' room_id=6 %}">
+          {% csrf_token %}
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="bookingModalLabelMG10307">Booking Ruang (MG1.03.07)</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label">Tanggal Booking</label>
+                <input type="date" class="form-control" name="tanggal" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Mulai</label>
+                <input type="time" class="form-control" name="waktu_mulai" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Selesai</label>
+                <input type="time" class="form-control" name="waktu_selesai" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary">Kirim Booking</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Modal Booking MG1.03.08 -->
+    <div class="modal fade" id="bookingModalMG10308" tabindex="-1">
+      <div class="modal-dialog">
+        <form method="post" action="{% url 'book_room' room_id=5 %}">
+          {% csrf_token %}
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="bookingModalLabelMG10308">Booking Ruang (MG1.03.08)</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label">Tanggal Booking</label>
+                <input type="date" class="form-control" name="tanggal" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Mulai</label>
+                <input type="time" class="form-control" name="waktu_mulai" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Selesai</label>
+                <input type="time" class="form-control" name="waktu_selesai" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary">Kirim Booking</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Lantai 4 (4 ruangan) -->
+    <div class="floor-section">
+        <div class="floor-header">
+            <h3><i class="fas fa-building"></i> Lantai 4</h3>
+        </div>
+        <div class="room-grid">
+            <!-- LAB.KOM -->
+            <div class="room-card available">
+                <div class="room-info">
+                    <h4>LAB.KOM</h4>
+                    <p class="status">Tersedia</p>
+                    <div class="room-details">
+                        <span><i class="fas fa-users"></i> Kapasitas: 40 orang</span>
+                        <span><i class="fas fa-tools"></i> Fasilitas: AC, Komputer, Proyektor</span>
+                    </div>
+                    <form method="post" action="{% url 'book_room' room_id=1 %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="nama" value="{{ user.username }}">
+                        <div class="mb-2">
+                            <input type="date" class="form-control mb-1" name="tanggal" required>
+                            <input type="time" class="form-control mb-1" name="waktu_mulai" required>
+                            <input type="time" class="form-control mb-1" name="waktu_selesai" required>
+                        </div>
+                        <button type="submit" class="book-btn">Kirim Booking</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- MG1.04.02 -->
+            <div class="room-card available">
+                <div class="room-info">
+                    <h4>MG1.04.02</h4>
+                    <p class="status">Tersedia</p>
+                    <div class="room-details">
+                        <span><i class="fas fa-users"></i> Kapasitas: 40 orang</span>
+                        <span><i class="fas fa-tools"></i> Fasilitas: AC, Proyektor</span>
+                    </div>
+                    <form method="post" action="{% url 'book_room' room_id=4 %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="nama" value="{{ user.username }}">
+                        <div class="mb-2">
+                            <input type="date" class="form-control mb-1" name="tanggal" required>
+                            <input type="time" class="form-control mb-1" name="waktu_mulai" required>
+                            <input type="time" class="form-control mb-1" name="waktu_selesai" required>
+                        </div>
+                        <button type="submit" class="book-btn">Kirim Booking</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- MG1.04.04 -->
+            <div class="room-card available">
+                <div class="room-info">
+                    <h4>MG1.04.04</h4>
+                    <p class="status">Tersedia</p>
+                    <div class="room-details">
+                        <span><i class="fas fa-users"></i> Kapasitas: 40 orang</span>
+                        <span><i class="fas fa-tools"></i> Fasilitas: AC, Proyektor</span>
+                    </div>
+                    <form method="post" action="{% url 'book_room' room_id=3 %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="nama" value="{{ user.username }}">
+                        <div class="mb-2">
+                            <input type="date" class="form-control mb-1" name="tanggal" required>
+                            <input type="time" class="form-control mb-1" name="waktu_mulai" required>
+                            <input type="time" class="form-control mb-1" name="waktu_selesai" required>
+                        </div>
+                        <button type="submit" class="book-btn">Kirim Booking</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- MG1.04.07 -->
+            <div class="room-card available">
+                <div class="room-info">
+                    <h4>MG1.04.07</h4>
+                    <p class="status">Tersedia</p>
+                    <div class="room-details">
+                        <span><i class="fas fa-users"></i> Kapasitas: 40 orang</span>
+                        <span><i class="fas fa-tools"></i> Fasilitas: AC, Proyektor</span>
+                    </div>
+                    <form method="post" action="{% url 'book_room' room_id=2 %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="nama" value="{{ user.username }}">
+                        <div class="mb-2">
+                            <input type="date" class="form-control mb-1" name="tanggal" required>
+                            <input type="time" class="form-control mb-1" name="waktu_mulai" required>
+                            <input type="time" class="form-control mb-1" name="waktu_selesai" required>
+                        </div>
+                        <button type="submit" class="book-btn">Kirim Booking</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Booking LAB.KOM -->
+    <div class="modal fade" id="bookingModalLABKOM" tabindex="-1">
+        <div class="modal-dialog">
+            <form method="post" action="{% url 'book_room' room_id=1 %}">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Booking LAB.KOM</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">    
+                        <div class="mb-3">
+                            <label class="form-label">Tanggal Booking</label>
+                            <input type="date" class="form-control" name="tanggal" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Waktu Mulai</label>
+                            <input type="time" class="form-control" name="waktu_mulai" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Waktu Selesai</label>
+                            <input type="time" class="form-control" name="waktu_selesai" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Kirim Booking</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Modal Booking MG1.04.02 -->
+    <div class="modal fade" id="bookingModalMG10402" tabindex="-1">
+      <div class="modal-dialog">
+        <form method="post" action="{% url 'book_room' room_id=4 %}">
+          {% csrf_token %}
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="bookingModalLabelMG10402">Booking Ruang (MG1.04.02)</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label">Tanggal Booking</label>
+                <input type="date" class="form-control" name="tanggal" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Mulai</label>
+                <input type="time" class="form-control" name="waktu_mulai" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Selesai</label>
+                <input type="time" class="form-control" name="waktu_selesai" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary">Kirim Booking</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Modal Booking MG1.04.04 -->
+    <div class="modal fade" id="bookingModalMG10404" tabindex="-1">
+      <div class="modal-dialog">
+        <form method="post" action="{% url 'book_room' room_id=3 %}">
+          {% csrf_token %}
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="bookingModalLabelMG10404">Booking Ruang (MG1.04.04)</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label">Tanggal Booking</label>
+                <input type="date" class="form-control" name="tanggal" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Mulai</label>
+                <input type="time" class="form-control" name="waktu_mulai" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Selesai</label>
+                <input type="time" class="form-control" name="waktu_selesai" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary">Kirim Booking</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Modal Booking MG1.04.07 -->
+    <div class="modal fade" id="bookingModalMG10407" tabindex="-1">
+      <div class="modal-dialog">
+        <form method="post" action="{% url 'book_room' room_id=2 %}">
+          {% csrf_token %}
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="bookingModalLabelMG10407">Booking Ruang (MG1.04.07)</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label class="form-label">Tanggal Booking</label>
+                <input type="date" class="form-control" name="tanggal" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Mulai</label>
+                <input type="time" class="form-control" name="waktu_mulai" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Waktu Selesai</label>
+                <input type="time" class="form-control" name="waktu_selesai" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary">Kirim Booking</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+</div>
+
+<!-- Modal Booking Form for MG1.02.02 -->
+<div class="modal fade" id="bookingModalMG10202" tabindex="-1" aria-labelledby="bookingModalLabelMG10202" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="post" action="{% url 'book_room' room_id=11 %}">
+      {% csrf_token %}
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="bookingModalLabelMG10202">Booking Ruang (MG1.02.02)</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="booking_name_2" class="form-label">Nama</label>
+            <input type="text" class="form-control" id="booking_name_2" name="nama" required>
+          </div>
+          <div class="mb-3">
+            <label for="booking_date_2" class="form-label">Tanggal Booking</label>
+            <input type="date" class="form-control" id="booking_date_2" name="tanggal" required>
+          </div>
+          <div class="mb-3">
+            <label for="booking_start_2" class="form-label">Waktu Mulai</label>
+            <input type="time" class="form-control" id="booking_start_2" name="waktu_mulai" required>
+          </div>
+          <div class="mb-3">
+            <label for="booking_end_2" class="form-label">Waktu Selesai</label>
+            <input type="time" class="form-control" id="booking_end_2" name="waktu_selesai" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Kirim Booking</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Chat Widget -->
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.querySelector('.main-content');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    
+    // Sidebar toggle functionality
+    sidebarToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        sidebar.classList.toggle('collapsed');
+        mainContent.classList.toggle('expanded');
+    });
+
+    // Only prevent default for anchor with href="#"
+    const menuItems = document.querySelectorAll('.sidebar-menu a[href="#"]');
+    menuItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Remove active class from all menu items
+            document.querySelectorAll('.sidebar-menu li').forEach(li => {
+                li.classList.remove('active');
+            });
+            // Add active class to clicked menu item's parent li
+            this.parentElement.classList.add('active');
+        });
+    });
+
+    // For mobile devices
+    if (window.innerWidth <= 768) {
+        sidebar.classList.remove('collapsed');
+    }
+
+    // Animasi untuk kemunculan floor sections
+    const floorSections = document.querySelectorAll('.floor-section');
+    floorSections.forEach((section, index) => {
+        section.style.animationDelay = `${index * 0.2}s`;
+    });
+
+    // Handling untuk tombol booking
+    const bookButtons = document.querySelectorAll('.book-btn:not([disabled])');
+    bookButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const roomName = this.closest('.room-info').querySelector('h4').textContent;
+            // Implementasi fungsi booking sesuai kebutuhan
+            alert(`Proses booking untuk ${roomName} akan dimulai`);
+        });
+    });
+
+    // Optional: Scroll ke notifikasi jika ada pesan
+    const alertBox = document.querySelector('.alert');
+    if (alertBox) {
+        alertBox.scrollIntoView({ behavior: 'smooth' });
+    }
+});
+</script>
+</body>
+</html>

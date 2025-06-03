@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Ruangan & Booking</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <h2>Daftar Ruangan</h2>
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Ruangan Tersedia</h5>
+                </div>
+                <div class="card-body">
+                    {% regroup rooms by floor as floor_list %}
+                    {% for floor in floor_list %}
+                    <h5 class="mb-3">Lantai {{ floor.grouper }}</h5>
+                    <table class="table mb-4">
+                        <thead>
+                            <tr>
+                                <th>Nomor Ruangan</th>
+                                <th>Kapasitas</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for room in floor.list %}
+                            <tr>
+                                <td>{{ room.number }}</td>
+                                <td>{{ room.capacity }} orang</td>
+                                <td>
+                                    <span class="badge {% if room.status == 'available' %}bg-success
+                                                      {% elif room.status == 'booked' %}bg-danger
+                                                      {% else %}bg-warning{% endif %}">
+                                        {% if room.status == 'available' %}Tersedia
+                                        {% elif room.status == 'booked' %}Sedang Digunakan
+                                        {% else %}{{ room.get_status_display }}{% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button type="button" 
+                                            class="btn btn-primary btn-sm" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#bookingModal{{ room.id }}"
+                                            {% if room.status != 'available' %}disabled{% endif %}>
+                                        {% if room.status == 'available' %}
+                                            Booking
+                                        {% else %}
+                                            Tidak Tersedia
+                                        {% endif %}
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Modal untuk setiap ruangan -->
+                            <div class="modal fade" id="bookingModal{{ room.id }}" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <form method="post" action="{% url 'book_room' room.id %}">
+                                        {% csrf_token %}
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Booking Ruang {{ room.number }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Tanggal</label>
+                                                    <input type="date" class="form-control" name="tanggal" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Waktu Mulai</label>
+                                                    <input type="time" class="form-control" name="waktu_mulai" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Waktu Selesai</label>
+                                                    <input type="time" class="form-control" name="waktu_selesai" required>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                <button type="submit" class="btn btn-primary">Kirim Booking</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">Kembali ke Dashboard</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Update status setiap menit
+    function updateRoomStatus() {
+        location.reload();
+    }
+    
+    // Update setiap 1 menit (60000 ms)
+    setInterval(updateRoomStatus, 60000);
+</script>
+</body>
+</html>
