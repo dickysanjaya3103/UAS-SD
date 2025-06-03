@@ -10,16 +10,19 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #1a237e;
-            --secondary-color: #283593;
-            --accent-color: #3949ab;
-            --success-color: #43a047;
-            --warning-color: #fdd835;
-            --danger-color: #e53935;
-        }
+        /* Update the root variables */
+:root {
+    --primary-blue: rgba(137, 207, 240, 0.75);    /* Reduced from 0.85 */
+    --secondary-blue: rgba(124, 185, 232, 0.75);  /* Reduced from 0.85 */
+    --accent-blue: rgba(185, 217, 235, 0.75);     /* Reduced from 0.85 */
+    --light-blue: #F0F8FF;
+    --soft-text: #6B8BA4;
+    --white: #ffffff;
+    --border-color: #E8F0F8;
+    --shadow-color: rgba(137, 207, 240, 0.08);    /* Reduced from 0.1 */
+}
 
-        /* Reset beberapa style dasar */
+/* Reset beberapa style dasar */
 body {
     margin: 0;
     padding: 0;
@@ -37,105 +40,122 @@ p.text-muted {
 
 /* Update sidebar styling */
 .sidebar {
-    background: var(--primary-color);
-    height: 100vh;
+    background: linear-gradient(180deg, 
+        rgba(137, 207, 240, 0.75), /* Reduced from 0.85 */
+        rgba(124, 185, 232, 0.75)  /* Reduced from 0.85 */
+    );
+    min-height: 100vh;
+    width: 280px;
     position: fixed;
-    width: 250px;
-    transition: all 0.3s ease;
-    z-index: 1000;
     left: 0;
     top: 0;
-    padding: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
 /* Update sidebar brand styling */
 .sidebar-brand {
-    background: var(--primary-color);
-    color: white;
-    padding: 15px;
-    height: 60px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 1.5rem;
     border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .brand-content {
     display: flex;
     align-items: center;
-    gap: 10px;
+    color: white;
+}
+
+/* Add user profile section */
+.user-profile {
+    padding: 2rem 1.5rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.user-avatar {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1rem;
+    background: rgba(255, 255, 255, 0.05); /* Reduced from 0.1 */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.user-name {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.user-role {
+    color: rgba(255, 255, 255, 0.6); /* Reduced from 0.7 */
+    font-size: 0.9rem;
 }
 
 /* Update toggle button styling */
 .sidebar-toggle {
     background: transparent;
-    color: white;
     border: none;
-    padding: 5px;
+    color: white;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 0.5rem;
     transition: all 0.3s ease;
 }
 
 .sidebar-toggle:hover {
-    color: rgba(255,255,255,0.8);
     transform: scale(1.1);
 }
 
 /* Update sidebar menu styling */
 .sidebar-menu {
-    padding: 0;
-    margin: 0;
-    list-style: none;
+    padding: 1rem 0;
 }
 
 .sidebar-menu li {
     padding: 0;
-    margin: 0;
+    margin: 0.5rem 1rem;
+    border-radius: 10px;
+    transition: all 0.3s ease;
 }
 
 .sidebar-menu li a {
-    color: #ecf0f1;
-    text-decoration: none;
     display: flex;
     align-items: center;
-    padding: 15px 20px;
-    transition: 0.3s;
+    padding: 0.8rem 1.2rem;
+    color: rgba(255, 255, 255, 0.85); /* Adjusted for readability */
+    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
 .sidebar-menu li a i {
-    margin-right: 10px;
     width: 20px;
+    margin-right: 10px;
+    font-size: 1.1rem;
 }
 
 .sidebar-menu li:hover {
-    background: var(--secondary-color);
-}
-
-/* Active menu item styling */
-.sidebar-menu li.active {
-    background: var(--secondary-color);
-    position: relative;
-}
-
-.sidebar-menu li.active::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 4px;
-    background-color: white;
-}
-
-.sidebar-menu li.active a {
-    color: white;
+    background: rgba(255, 255, 255, 0.05); /* Reduced from 0.08 */
+    transform: translateX(5px);
 }
 
 .sidebar-menu li.active {
-    background: var(--secondary-color);
+    background: rgba(255, 255, 255, 0.1); /* Reduced from 0.15 */
+}
+
+.logout-item {
+    margin-top: 2rem !important;
+}
+
+.logout-item a {
+    color: #ff6b6b !important;
 }
 
 /* Update main content */
@@ -176,150 +196,7 @@ p.text-muted {
     }
 }
 
-        .sidebar-toggle {
-            position: absolute;
-            right: -28px;
-            top: 20px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 0 5px 5px 0;
-            padding: 8px 10px;
-            z-index: 1001;
-            cursor: pointer;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-            width: 28px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .sidebar-toggle:hover {
-            background: var(--secondary-color);
-        }
-
-        /* Rotate arrow when sidebar is collapsed */
-        .sidebar.collapsed .sidebar-toggle i {
-            transform: rotate(180deg);
-        }
-
-        /* Transition for smooth arrow rotation */
-        .sidebar-toggle i {
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar.collapsed .sidebar-toggle {
-            right: -40px;
-        }
-
-        .sidebar {
-            background: var(--primary-color);
-            min-height: 100vh;
-            padding: 20px 0;
-            position: fixed;
-            width: 250px;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            left: 0;
-        }
-
-        .sidebar.collapsed {
-            left: -250px;
-        }
-
-        .sidebar-brand {
-            color: white;
-            text-align: center;
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .sidebar-menu {
-            padding: 0;
-            margin: 0;
-            list-style: none;
-        }
-
-        .sidebar-menu li {
-            padding: 10px 20px;
-            margin: 8px 0;
-        }
-
-        .sidebar-menu li a {
-            color: #ecf0f1;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            transition: 0.3s;
-        }
-
-        .sidebar-menu li a i {
-            margin-right: 10px;
-            width: 20px;
-        }
-
-        .sidebar-menu li:hover {
-            background: var(--secondary-color);
-            border-radius: 5px;
-        }
-
-        .main-content {
-            margin-left: 250px;
-            padding: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .main-content.expanded {
-            margin-left: 0;
-        }
-
-        .quick-stats {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--accent-color);
-        }
-
-        .chat-widget {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-
-        .chat-button {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        /* Update media queries for mobile */
-        @media (max-width: 768px) {
-            .sidebar {
-                left: -70px;
-            }
-            
-            .sidebar.show {
-                left: 0;
-            }
-            
-            .sidebar-toggle {
-                right: -40px;
-            }
-            
-            .sidebar.show .sidebar-toggle {
-                right: -40px;
-            }
-        }
-
-/* Floor Sections Styling */
+        /* Floor Sections Styling */
 .floor-section {
     background: white;
     border-radius: 15px;
@@ -330,7 +207,10 @@ p.text-muted {
 }
 
 .floor-header {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, 
+        rgba(137, 207, 240, 0.65), /* Reduced from 0.75 */
+        rgba(124, 185, 232, 0.65)  /* Reduced from 0.75 */
+    );
     color: white;
     padding: 20px;
     border-radius: 15px 15px 0 0;
@@ -438,7 +318,7 @@ p.text-muted {
 .book-btn {
     width: 100%;
     padding: 12px;
-    background: var(--primary-color);
+    background: var(--primary-blue);
     color: white;
     border: none;
     border-radius: 8px;
@@ -449,8 +329,8 @@ p.text-muted {
 }
 
 .book-btn:hover:not([disabled]) {
-    background: var(--secondary-color);
-    transform: scale(1.02);
+    background: rgba(124, 185, 232, 0.85);
+    box-shadow: 0 4px 15px rgba(137, 207, 240, 0.1);
 }
 
 .book-btn[disabled] {
@@ -511,17 +391,24 @@ p.text-muted {
     padding: 50px 0;
     margin: 0 0 30px 0;
     background: linear-gradient(135deg, 
-        var(--primary-color), 
-        var(--secondary-color),
-        var(--accent-color));
-    background-size: 200% 200%;
+        rgba(137, 207, 240, 0.3),  /* Reduced from 0.5 */
+        rgba(124, 185, 232, 0.3),  /* Reduced from 0.5 */
+        rgba(185, 217, 235, 0.3)), /* Reduced from 0.5 */
+        url('/static/images/bg-welcome.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     border-radius: 15px;
     text-align: center;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    animation: gradientShift 10s ease infinite;
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
 }
 
 .welcome-content {
+    position: relative;
+    z-index: 2;
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
@@ -584,8 +471,8 @@ p.text-muted {
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .welcome-section {
-        margin: 10px;
-        padding: 30px 15px;
+        background-position: center;
+        min-height: 180px;
     }
     
     .welcome-title {
@@ -604,28 +491,47 @@ p.text-muted {
 <div class="sidebar" id="sidebar">
     <div class="sidebar-brand">
         <div class="brand-content">
-            <i class="fas fa-university me-2"></i>
-            <span>RuangKita</span>
+            <i class="fas fa-university text-2xl"></i>
+            <span class="text-xl font-bold ml-3">RuangKita</span>
         </div>
         <button class="sidebar-toggle" id="sidebarToggle">
             <i class="fas fa-chevron-left"></i>
         </button>
     </div>
+
+    <!-- Add user profile section -->
+    <div class="user-profile">
+        <div class="user-avatar">
+            <i class="fas fa-user-circle text-4xl"></i>
+        </div>
+        <h6 class="user-name">{{ user.get_full_name|default:user.username }}</h6>
+        <p class="user-role">{{ user.email }}</p>
+    </div>
+
     <ul class="sidebar-menu">
-        <li class="active">
-            <a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+        <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+            <a href="{% url 'dashboard' %}">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
         </li>
-        <li>
-            <a href="{% url 'jadwal_list' %}"><i class="fas fa-calendar-alt"></i><span>Jadwal</span></a>
+        <li class="{% if request.resolver_match.url_name == 'room_list' %}active{% endif %}">
+            <a href="{% url 'room_list' %}">
+                <i class="fas fa-bookmark"></i>
+                <span>Booking</span>
+            </a>
         </li>
-        <li>
-            <a href="{% url 'room_list' %}"><i class="fas fa-bookmark"></i><span>Booking</span></a>
+        <li class="{% if request.resolver_match.url_name == 'my_bookings' %}active{% endif %}">
+            <a href="{% url 'my_bookings' %}">
+                <i class="fas fa-history"></i>
+                <span>Riwayat</span>
+            </a>
         </li>
-        <li>
-            <a href="{% url 'my_bookings' %}"><i class="fas fa-history"></i><span>Riwayat</span></a>
-        </li>
-        <li>
-            <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+        <li class="logout-item">
+            <a href="{% url 'logout' %}">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
         </li>
     </ul>
 </div>
